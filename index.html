@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Preço</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f5f7fa;
+            --accent-color: #0066cc;
+            --accent-light: #e6f0ff;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --border-color: #d2d2d7;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary-bg);
+            color: var(--text-primary);
+            padding: 1rem;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .card {
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.25rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background-color: #0055b3;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e9ecf1;
+        }
+        
+        .btn-danger {
+            background-color: #ff3b30;
+        }
+        
+        .btn-danger:hover {
+            background-color: #e63229;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.8rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .flex {
+            display: flex;
+            align-items: center;
+        }
+        
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        
+        .space-between {
+            justify-content: space-between;
+        }
+        
+        .gap-2 {
+            gap: 0.5rem;
+        }
+        
+        .mt-4 {
+            margin-top: 1rem;
+        }
+        
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        
+        .tabela-item {
+            background-color: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .tabela-item h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .tabela-acoes {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .resultado-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background-color: var(--accent-light);
+            border-radius: 8px;
+        }
+        
+        .copy-area {
+            background-color: var(--secondary-bg);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-top: 1rem;
+            white-space: pre-line;
+            min-height: 100px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .show-toast {
+            opacity: 1;
+        }
+        
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        
+        .modal {
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 500px;
+            padding: 1.5rem;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculadora de Preço</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="calculadora">Calculadora</button>
+            <button class="tab-btn" data-tab="tabelas">Tabelas</button>
+        </div>
+        
+        <div class="tab-content active" id="tab-calculadora">
+            <div class="card">
+                <div class="input-group">
+                    <label for="preco-padrao">Preço padrão (R$)</label>
+                    <input type="number" id="preco-padrao" min="0" step="0.01" placeholder="Ex: 2,03" autofocus>
+                </div>
+                
+                <div class="flex space-between mb-4">
+                    <h2>Resultados</h2>
+                    <button class="btn btn-sm" id="btn-copiar">Copiar Todos</button>
+                </div>
+                
+                <div id="resultados-container">
+                    <!-- Resultados serão inseridos aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="tab-tabelas">
+            <div class="card">
+                <div class="flex space-between mb-4">
+                    <h2>Tabelas de Acréscimo</h2>
+                    <button class="btn btn-sm" id="btn-nova-tabela">+ Nova Tabela</button>
+                </div>
+                
+                <div id="tabelas-container">
+                    <!-- Tabelas serão inseridas aqui via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Adicionar/Editar Tabela -->
+    <div class="modal-backdrop" id="modal-backdrop">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Nova Tabela</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-tabela">
+                    <input type="hidden" id="tabela-id">
+                    <div class="input-group">
+                        <label for="tabela-nome">Nome da tabela (uso interno)</label>
+                        <input type="text" id="tabela-nome" placeholder="Ex: Tabela 0001">
+                    </div>
+                    <div class="input-group">
+                        <label for="tabela-percentual">Percentual de acréscimo (%)*</label>
+                        <input type="number" id="tabela-percentual" min="0" step="0.1" placeholder="Ex: 10" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="tabela-qtd-min">Quantidade mínima total</label>
+                        <input type="number" id="tabela-qtd-min" min="0" placeholder="Ex: 3000">
+                    </div>
+                    <div class="input-group">
+                        <label for="tabela-qtd-cor">Quantidade mínima por cor</label>
+                        <input type="number" id="tabela-qtd-cor" min="0" placeholder="Ex: 1000">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btn-cancelar">Cancelar</button>
+                <button class="btn" id="btn-salvar">Salvar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast notification -->
+    <div class="toast" id="toast">Copiado!</div>
+    
+    <script>
+        // Definição das tabelas padrão
+        const tabelasPadrao = [
+            {
+                id: 'tabela-0001',
+                nome: 'Tabela 0001',
+                percentual: 0,
+                qtdMin: 200,
+                qtdCor: 200,
+                descricao: 'Tabela Base'
+            },
+            {
+                id: 'tabela-0002',
+                nome: 'Tabela 0002',
+                percentual: 10,
+                qtdMin: 200,
+                qtdCor: 100,
+                descricao: '200 por item, podendo ser 100 por cor'
+            },
+            {
+                id: 'tabela-0005',
+                nome: 'Tabela 0005',
+                percentual: 30,
+                qtdMin: 150,
+                qtdCor: 50,
+                descricao: '150 por item, podendo ser 50 por cor (ex: 50-50-50)'
+            },
+            {
+                id: 'tabela-0016',
+                nome: 'Tabela 0016',
+                percentual: 50,
+                qtdMin: 100,
+                qtdCor: 50,
+                descricao: '100 por item, podendo ser 50 por cor (ex: 50-50)'
+            },
+            {
+                id: 'tabela-0024',
+                nome: 'Tabela 0024',
+                percentual: 80,
+                qtdMin: 50,
+                qtdCor: 25,
+                descricao: '50 por item, podendo ser 25 por cor (ex: 25-25)'
+            },
+            {
+                id: 'tabela-0018',
+                nome: 'Tabela 0018',
+                percentual: 100,
+                qtdMin: 200,
+                qtdCor: 200,
+                descricao: 'Gola Express'
+            }
+        ];
+        
+        // Elementos DOM
+        const precoPadraoInput = document.getElementById('preco-padrao');
+        const tabelasContainer = document.getElementById('tabelas-container');
+        const resultadosContainer = document.getElementById('resultados-container');
+        const btnCopiar = document.getElementById('btn-copiar');
+        const toast = document.getElementById('toast');
+        const btnNovaTabela = document.getElementById('btn-nova-tabela');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const modalClose = document.getElementById('modal-close');
+        const btnCancelar = document.getElementById('btn-cancelar');
+        const btnSalvar = document.getElementById('btn-salvar');
+        const modalTitle = document.getElementById('modal-title');
+        const formTabela = document.getElementById('form-tabela');
+        const tabelaIdInput = document.getElementById('tabela-id');
+        const tabelaNomeInput = document.getElementById('tabela-nome');
+        const tabelaPercentualInput = document.getElementById('tabela-percentual');
+        const tabelaQtdMinInput = document.getElementById('tabela-qtd-min');
+        const tabelaQtdCorInput = document.getElementById('tabela-qtd-cor');
+        
+        // Estado da aplicação
+        let tabelas = [];
+        
+        // Inicialização
+        function init() {
+            // Carregar tabelas do localStorage ou usar as padrão
+            const tabelasSalvas = localStorage.getItem('tabelas');
+            tabelas = tabelasSalvas ? JSON.parse(tabelasSalvas) : [...tabelasPadrao];
+            
+            renderizarTabelas();
+            
+            // Atualizar resultados quando o preço padrão for alterado
+            precoPadraoInput.addEventListener('input', calcularResultados);
+            
+            // Botão copiar
+            btnCopiar.addEventListener('click', copiarResultados);
+            
+            // Botão nova tabela
+            btnNovaTabela.addEventListener('click', abrirModalNovaTabela);
+            
+            // Fechar modal
+            modalClose.addEventListener('click', fecharModal);
+            btnCancelar.addEventListener('click', fecharModal);
+            
+            // Salvar tabela
+            btnSalvar.addEventListener('click', salvarTabela);
+            
+            // Sistema de abas
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remover classe ativa de todos os botões e conteúdos
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Adicionar classe ativa ao botão clicado
+                    btn.classList.add('active');
+                    
+                    // Mostrar o conteúdo correspondente
+                    const tabId = btn.dataset.tab;
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                });
+            });
+            
+            // Iniciar aplicação
+            calcularResultados();
+        }
+        
+        // Renderizar tabelas
+        function renderizarTabelas() {
+            tabelasContainer.innerHTML = '';
+            
+            // Ordenar tabelas por percentual
+            tabelas.sort((a, b) => a.percentual - b.percentual);
+            
+            tabelas.forEach(tabela => {
+                const elemento = document.createElement('div');
+                elemento.className = 'tabela-item';
+                elemento.id = tabela.id;
+                
+                elemento.innerHTML = `
+                    <h3>${tabela.nome}</h3>
+                    <div>
+                        <p><strong>Acréscimo:</strong> ${tabela.percentual}%</p>
+                        ${tabela.qtdMin ? `<p><strong>Quantidade mínima:</strong> ${tabela.qtdMin}</p>` : ''}
+                        ${tabela.qtdCor ? `<p><strong>Quantidade por cor:</strong> ${tabela.qtdCor}</p>` : ''}
+                        ${tabela.descricao ? `<p><strong>Descrição:</strong> ${tabela.descricao}</p>` : ''}
+                    </div>
+                    <div class="tabela-acoes">
+                        <button class="btn btn-sm btn-secondary btn-editar" data-id="${tabela.id}">Editar</button>
+                        <button class="btn btn-sm btn-danger btn-excluir" data-id="${tabela.id}">Excluir</button>
+                    </div>
+                `;
+                
+                tabelasContainer.appendChild(elemento);
+            });
+            
+            // Adicionar event listeners aos botões
+            document.querySelectorAll('.btn-editar').forEach(btn => {
+                btn.addEventListener('click', () => abrirModalEditarTabela(btn.dataset.id));
+            });
+            
+            document.querySelectorAll('.btn-excluir').forEach(btn => {
+                btn.addEventListener('click', () => excluirTabela(btn.dataset.id));
+            });
+            
+            // Salvar tabelas no localStorage
+            localStorage.setItem('tabelas', JSON.stringify(tabelas));
+        }
+        
+        // Calcular e exibir resultados
+        function calcularResultados() {
+            resultadosContainer.innerHTML = '';
+            
+            const precoPadrao = parseFloat(precoPadraoInput.value);
+            
+            if (isNaN(precoPadrao) || precoPadrao <= 0) {
+                return;
+            }
+            
+            // Ordenar tabelas por percentual
+            tabelas.sort((a, b) => a.percentual - b.percentual);
+            
+            tabelas.forEach(tabela => {
+                const valorCalculado = precoPadrao + (precoPadrao * tabela.percentual / 100);
+                const valorFormatado = valorCalculado.toFixed(2).replace('.', ',');
+                
+                // Construir texto do resultado conforme a regra
+                let textoResultado = '';
+                
+                // Tabela 0001 (Base)
+                if (tabela.id === 'tabela-0001') {
+                    textoResultado = `${tabela.qtdMin} unidades por item e cor: R$ ${valorFormatado}`;
+                } 
+                // Tabela 0018 (Gola Express)
+                else if (tabela.id === 'tabela-0018') {
+                    textoResultado = `${tabela.qtdMin} unidades (Gola Express): R$ ${valorFormatado}`;
+                }
+                // Outras tabelas
+                else if (tabela.qtdMin && tabela.qtdCor && tabela.qtdMin !== tabela.qtdCor) {
+                    textoResultado = `${tabela.qtdMin} unidades, podendo ser ${tabela.qtdCor} por cor: R$ ${valorFormatado}`;
+                } else if (tabela.qtdMin) {
+                    textoResultado = `${tabela.qtdMin} unidades: R$ ${valorFormatado}`;
+                } else {
+                    textoResultado = `R$ ${valorFormatado}`;
+                }
+                
+                // Adicionar ao container de resultados
+                const elementoResultado = document.createElement('div');
+                elementoResultado.className = 'resultado-item';
+                elementoResultado.innerHTML = `<p>${textoResultado}</p>`;
+                resultadosContainer.appendChild(elementoResultado);
+            });
+        }
+        
+        // Copiar resultados
+        function copiarResultados() {
+            const itens = document.querySelectorAll('.resultado-item p');
+            let texto = '';
+            
+            itens.forEach(item => {
+                texto += item.textContent + '\n';
+            });
+            
+            if (!texto.trim()) {
+                return;
+            }
+            
+            navigator.clipboard.writeText(texto.trim())
+                .then(() => {
+                    // Mostrar toast
+                    toast.classList.add('show-toast');
+                    setTimeout(() => {
+                        toast.classList.remove('show-toast');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Erro ao copiar: ', err);
+                    alert('Erro ao copiar o texto. Por favor, tente novamente.');
+                });
+        }
+        
+        // Abrir modal para nova tabela
+        function abrirModalNovaTabela() {
+            modalTitle.textContent = 'Nova Tabela';
+            formTabela.reset();
+            tabelaIdInput.value = 'tabela-' + Date.now();
+            modalBackdrop.style.display = 'flex';
+        }
+        
+        // Abrir modal para editar tabela
+        function abrirModalEditarTabela(id) {
+            const tabela = tabelas.find(t => t.id === id);
+            
+            if (!tabela) return;
+            
+            modalTitle.textContent = 'Editar Tabela';
+            tabelaIdInput.value = tabela.id;
+            tabelaNomeInput.value = tabela.nome || '';
+            tabelaPercentualInput.value = tabela.percentual || '';
+            tabelaQtdMinInput.value = tabela.qtdMin || '';
+            tabelaQtdCorInput.value = tabela.qtdCor || '';
+            
+            modalBackdrop.style.display = 'flex';
+        }
+        
+        // Fechar modal
+        function fecharModal() {
+            modalBackdrop.style.display = 'none';
+        }
+        
+        // Salvar tabela
+        function salvarTabela() {
+            const id = tabelaIdInput.value;
+            const nome = tabelaNomeInput.value;
+            const percentual = parseFloat(tabelaPercentualInput.value);
+            const qtdMin = parseInt(tabelaQtdMinInput.value) || null;
+            const qtdCor = parseInt(tabelaQtdCorInput.value) || null;
+            
+            if (isNaN(percentual)) {
+                alert('Por favor, insira um percentual válido.');
+                return;
+            }
+            
+            const novaTabela = {
+                id,
+                nome,
+                percentual,
+                qtdMin,
+                qtdCor
+            };
+            
+            // Verificar se é uma edição ou nova tabela
+            const index = tabelas.findIndex(t => t.id === id);
+            
+            if (index !== -1) {
+                tabelas[index] = novaTabela;
+            } else {
+                tabelas.push(novaTabela);
+            }
+            
+            renderizarTabelas();
+            calcularResultados();
+            fecharModal();
+        }
+        
+        // Excluir tabela
+        function excluirTabela(id) {
+            if (confirm('Tem certeza que deseja excluir esta tabela?')) {
+                tabelas = tabelas.filter(t => t.id !== id);
+                renderizarTabelas();
+                calcularResultados();
+            }
+        }
+        
+        // Iniciar a aplicação
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
